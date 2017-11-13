@@ -2,18 +2,19 @@
 '''
     功能介绍：
             1.完成对swf文件中swc和swz的分类
-            2.完成对swc文件的解压
+            2.完成对swc,swz文件的解压
 
-    二〇一七年十一月二日 16:54:43
+    二〇一七年十一月十三日 09:59:36
 '''
 import os
 import shutil
+import swfunzip
 
 #显示功能列表
 def ShowUi():
     print ("...........功能列表..................\r\n");
     print ("1.对swf文件进行分类                   \r\n");
-    print ("2.对swc文件进行解压                   \r\n");
+    print ("2.对swc,swz文件进行解压                \r\n");
     print ("......................................\r\n");
     return 0;
 
@@ -38,13 +39,31 @@ def DirectoryOperation():
         except BaseException, e:
             print ("异常：%s\r\n", e);
 
-    #检测是否有swf目录
+    #检测是否有swf,swc,swz目录
     while 1:
         try:
             if (os.path.isdir(filepath + '\\swf')):
                 break;
             else:
                 os.mkdir(filepath + '\\swf');
+        except BaseException, e:
+            print ("异常：%s\r\n", e);
+
+    while 1:
+        try:
+            if (os.path.isdir(filepath + '\\swc')):
+                break;
+            else:
+                os.mkdir(filepath + '\\swc');
+        except BaseException, e:
+            print ("异常：%s\r\n", e);
+
+    while 1:
+        try:
+            if (os.path.isdir(filepath + '\\swz')):
+                break;
+            else:
+                os.mkdir(filepath + '\\swz');
         except BaseException, e:
             print ("异常：%s\r\n", e);
 
@@ -68,11 +87,19 @@ def FileClassification():
            fopen.close();
            #移动到里面
            shutil.move(filepath + "\\" + allDir, filepath + '\\swf');
+        if (a == "CWS"):
+            fopen.close();
+            # 移动到里面
+            shutil.move(filepath + "\\" + allDir, filepath + '\\swc');
+        if (a == "ZWS"):
+            fopen.close();
+            # 移动到里面
+            shutil.move(filepath + "\\" + allDir, filepath + '\\swz');
 
     return 0;
 
-#解压swc
-def DecompressionSWC():
+#解压swc,swz
+def DecompressionSWF():
 
     #目录操作
     filepath = DirectoryOperation();
@@ -85,8 +112,9 @@ def DecompressionSWC():
             continue;
         fopen = open(filepath + "\\" + allDir, 'r+');
         a = fopen.read(3);
-        if (a == "CWS"):
+        if (a == "CWS" or a == "ZWS"):
            fopen.close();
+
         os.system('python swfunzip.py '+ filepath + "\\" + allDir + " " + filepath + '\\swf\\' + allDir);
 
     return 0;
@@ -105,7 +133,7 @@ def Function():
         if (Number == 1):
             FileClassification();
         elif (Number == 2):
-            DecompressionSWC();
+            DecompressionSWF();
         else:
             break;
 
